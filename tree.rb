@@ -66,7 +66,7 @@ class Tree
 
   def inorder(node = @root, arr = [], &dfs_proc)
     return if node.nil?
-    
+
     if block_given?
       inorder(node.left_child, &dfs_proc)
       dfs_proc.call(node)
@@ -101,7 +101,14 @@ class Tree
     r_height = height(node.right_child)
 
     l_height > r_height ? (l_height + 1) : (r_height + 1)
+  end
 
+  def depth(node = @root)
+    return 'Empty node' if node.nil?
+
+    root_height = height(@root)
+    node_height = height(node)
+    root_height - node_height
   end
 
   def find(value, node = @root)
@@ -156,6 +163,5 @@ b_tree.pretty_print
 dfs_proc = proc do |node|
   puts "Node Value: #{node} Left Child: #{node.left_child} Right Child: #{node.right_child}"
 end
-# b_tree.postorder(&dfs_proc)
-# puts b_tree.postorder
-puts b_tree.height
+b_tree.postorder(&dfs_proc)
+puts b_tree.postorder
