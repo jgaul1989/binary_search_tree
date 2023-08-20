@@ -94,6 +94,16 @@ class Tree
     end
   end
 
+  def height(node = @root)
+    return 0 if node.nil?
+
+    l_height = height(node.left_child)
+    r_height = height(node.right_child)
+
+    l_height > r_height ? (l_height + 1) : (r_height + 1)
+
+  end
+
   def find(value, node = @root)
     return 'None' if node.nil?
     return node if node.value == value
@@ -146,6 +156,6 @@ b_tree.pretty_print
 dfs_proc = proc do |node|
   puts "Node Value: #{node} Left Child: #{node.left_child} Right Child: #{node.right_child}"
 end
-b_tree.postorder(&dfs_proc)
-puts b_tree.postorder
-
+# b_tree.postorder(&dfs_proc)
+# puts b_tree.postorder
+puts b_tree.height
