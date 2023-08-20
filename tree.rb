@@ -49,31 +49,49 @@ class Tree
     sorted_queue unless block_given?
   end
 
-  def preorder(dfs_proc, node = @root)
+  def preorder(node = @root, arr = [], &dfs_proc)
     return if node.nil?
 
-    dfs_proc.call(node)
-    preorder(dfs_proc, node.left_child)
-    preorder(dfs_proc, node.right_child)
-
+    if block_given?
+      dfs_proc.call(node)
+      preorder(node.left_child, &dfs_proc)
+      preorder(node.right_child, &dfs_proc)
+    else
+      arr.push(node)
+      preorder(node.left_child, arr)
+      preorder(node.right_child, arr)
+      arr
+    end
   end
 
-  def inorder(dfs_proc, node = @root)
+  def inorder(node = @root, arr = [], &dfs_proc)
     return if node.nil?
-
-    inorder(dfs_proc, node.left_child)
-    dfs_proc.call(node)
-    inorder(dfs_proc, node.right_child)
-
+    
+    if block_given?
+      inorder(node.left_child, &dfs_proc)
+      dfs_proc.call(node)
+      inorder(node.right_child, &dfs_proc)
+    else
+      inorder(node.left_child, arr)
+      arr.push(node)
+      inorder(node.right_child, arr)
+      arr
+    end
   end
 
-  def postorder(dfs_proc, node = @root)
+  def postorder(node = @root, arr = [], &dfs_proc)
     return if node.nil?
 
-    postorder(dfs_proc, node.left_child)
-    postorder(dfs_proc, node.right_child)
-    dfs_proc.call(node)
-
+    if block_given?
+      postorder(node.left_child, &dfs_proc)
+      postorder(node.right_child, &dfs_proc)
+      dfs_proc.call(node)
+    else
+      postorder(node.left_child, arr)
+      postorder(node.right_child, arr)
+      arr.push(node)
+      arr
+    end
   end
 
   def find(value, node = @root)
@@ -125,10 +143,9 @@ end
 
 b_tree = Tree.new([5, 9, 13, 13, 11, 7, 2])
 b_tree.pretty_print
-# b_tree.level_order do |node|
-#   puts "Node Value: #{node} Left Child: #{node.left_child} Right Child: #{node.right_child}"
-# end
 dfs_proc = proc do |node|
   puts "Node Value: #{node} Left Child: #{node.left_child} Right Child: #{node.right_child}"
 end
-b_tree.postorder(dfs_proc)
+b_tree.postorder(&dfs_proc)
+puts b_tree.postorder
+
