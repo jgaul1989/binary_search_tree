@@ -49,6 +49,33 @@ class Tree
     sorted_queue unless block_given?
   end
 
+  def preorder(dfs_proc, node = @root)
+    return if node.nil?
+
+    dfs_proc.call(node)
+    preorder(dfs_proc, node.left_child)
+    preorder(dfs_proc, node.right_child)
+
+  end
+
+  def inorder(dfs_proc, node = @root)
+    return if node.nil?
+
+    inorder(dfs_proc, node.left_child)
+    dfs_proc.call(node)
+    inorder(dfs_proc, node.right_child)
+
+  end
+
+  def postorder(dfs_proc, node = @root)
+    return if node.nil?
+
+    postorder(dfs_proc, node.left_child)
+    postorder(dfs_proc, node.right_child)
+    dfs_proc.call(node)
+
+  end
+
   def find(value, node = @root)
     return 'None' if node.nil?
     return node if node.value == value
@@ -98,6 +125,10 @@ end
 
 b_tree = Tree.new([5, 9, 13, 13, 11, 7, 2])
 b_tree.pretty_print
-b_tree.level_order do |node|
+# b_tree.level_order do |node|
+#   puts "Node Value: #{node} Left Child: #{node.left_child} Right Child: #{node.right_child}"
+# end
+dfs_proc = proc do |node|
   puts "Node Value: #{node} Left Child: #{node.left_child} Right Child: #{node.right_child}"
 end
+b_tree.postorder(dfs_proc)
