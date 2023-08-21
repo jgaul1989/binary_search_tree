@@ -157,8 +157,15 @@ class Tree
     pretty_print(node.left_child, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_child
   end
 
-  def balanced?
-    (height(@root.left_child) - height(@root.right_child)) <= 1
+  def balanced?(node = @root)
+    return true if node.nil?
+
+    lh = height(node.left_child)
+    rh = height(node.right_child)
+
+    return true if ((lh - rh).abs <= 1) && (balanced?(node.left_child) == true) && (balanced?(node.right_child) == true)
+
+    false
   end
 
   def rebalance
@@ -168,15 +175,4 @@ class Tree
     @sorted = arr.sort.uniq
     @root = build_tree(@sorted, 0, @sorted.length)
   end
-
 end
-
-b_tree = Tree.new([5, 9, 13, 13, 11, 7, 3])
-b_tree.insert(2)
-b_tree.insert(1)
-b_tree.pretty_print
-# dfs_proc = proc do |node|
-#   puts "Node Value: #{node} Left Child: #{node.left_child} Right Child: #{node.right_child}"
-# end
-# b_tree.postorder(&dfs_proc)
-# puts b_tree.postorder
