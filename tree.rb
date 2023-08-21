@@ -2,6 +2,7 @@
 
 require_relative 'node'
 
+# the class for the BST
 class Tree
   attr_accessor :root, :sorted
 
